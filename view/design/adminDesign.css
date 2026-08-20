@@ -2,15 +2,19 @@ body {
 
     background-color: whitesmoke;
 
+    margin: 0;
+
+    font-family: Arial;
+
 }
 
 .container {
 
-    width: 1000px;
+    width: 900px;
 
     margin: auto;
 
-    background-color: lightblue;
+    background-color: white;
 
     padding: 20px;
 
@@ -20,6 +24,8 @@ h1 {
 
     text-align: center;
 
+    margin-bottom: 10px;
+
 }
 
 h2 {
@@ -28,15 +34,31 @@ h2 {
 
 }
 
+.welcome {
+
+    text-align: center;
+
+}
+
+fieldset {
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+}
+
+legend {
+
+    font-weight: bold;
+
+}
+
 table {
 
     width: 100%;
 
-}
-
-th {
-
-    background-color: lightgray;
+    border-collapse: collapse;
 
 }
 
@@ -46,16 +68,31 @@ td {
 
 }
 
-input {
+th {
+
+    padding: 8px;
+
+    background-color: lightblue;
+
+}
+
+input,
+select {
 
     width: 300px;
 
-    padding: 5px;
+    padding: 7px;
 
 }
 
 button {
 
-    padding: 10px 20px 10px 20px;
+    padding: 8px 15px;
+
+}
+
+button:hover {
+
+    background-color: lightblue;
 
 }
