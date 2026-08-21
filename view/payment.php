@@ -4,7 +4,7 @@
 
     <title>Payment Management</title>
 
-    <link rel="stylesheet" type="text/css" href="adminDesign.css">
+    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
 
     <script>
 
@@ -22,7 +22,6 @@
 
         }
 
-
         function editPayment() {
 
             let confirmEdit = confirm("Are you sure you want to edit this payment?");
@@ -36,7 +35,6 @@
             return false;
 
         }
-
 
         function removePayment() {
 
@@ -63,9 +61,7 @@
         <h1>Payment Management</h1>
 
         <p>
-
             <a href="adminPage.php">Back to Dashboard</a>
-
         </p>
 
         <fieldset>
@@ -102,6 +98,30 @@
 
                         <td>
                             <input type="date" name="paymentDate">
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><b>Payment Method:</b></td>
+
+                        <td>
+
+                            <select name="paymentMethod">
+
+                                <option value="">Select Method</option>
+
+                                <option value="Cash">Cash</option>
+
+                                <option value="Card">Card</option>
+
+                                <option value="Bkash">Bkash</option>
+
+                                <option value="Nagad">Nagad</option>
+
+                            </select>
+
                         </td>
 
                     </tr>
@@ -160,6 +180,8 @@
 
                 <th>Payment Date</th>
 
+                <th>Payment Method</th>
+
                 <th>Status</th>
 
                 <th>Action</th>
@@ -174,7 +196,9 @@
 
                 <td>500</td>
 
-                <td>2026-08-20</td>
+                <td>2026-08-21</td>
+
+                <td>Cash</td>
 
                 <td>Paid</td>
 
