@@ -4,8 +4,6 @@ body {
 
     margin: 0;
 
-    font-family: Arial;
-
 }
 
 .container {
@@ -23,8 +21,6 @@ body {
 h1 {
 
     text-align: center;
-
-    margin-bottom: 10px;
 
 }
 
@@ -58,8 +54,6 @@ table {
 
     width: 100%;
 
-    border-collapse: collapse;
-
 }
 
 td {
@@ -81,18 +75,18 @@ select {
 
     width: 300px;
 
-    padding: 7px;
+    padding: 5px;
 
 }
 
 button {
 
-    padding: 8px 15px;
+    padding: 10px 20px 10px 20px;
 
 }
 
-button:hover {
+a {
 
-    background-color: lightblue;
+    text-decoration: none;
 
 }
