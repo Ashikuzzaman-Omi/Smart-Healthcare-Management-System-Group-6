@@ -10,7 +10,7 @@ $title = "Smart Healthcare Management System";
 
     <title><?php echo $title; ?></title>
 
-    <link rel="stylesheet" type="text/css" href="adminDesign.css">
+    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
 
     <script>
 

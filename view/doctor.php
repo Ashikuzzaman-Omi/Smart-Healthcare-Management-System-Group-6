@@ -4,7 +4,7 @@
 
     <title>Doctor Management</title>
 
-    <link rel="stylesheet" type="text/css" href="adminDesign.css">
+    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
 
     <script>
 
@@ -22,7 +22,6 @@
 
         }
 
-
         function editDoctor() {
 
             let confirmEdit = confirm("Are you sure you want to edit this doctor?");
@@ -36,7 +35,6 @@
             return false;
 
         }
-
 
         function removeDoctor() {
 
@@ -63,9 +61,7 @@
         <h1>Doctor Management</h1>
 
         <p>
-
             <a href="adminPage.php">Back to Dashboard</a>
-
         </p>
 
         <fieldset>
