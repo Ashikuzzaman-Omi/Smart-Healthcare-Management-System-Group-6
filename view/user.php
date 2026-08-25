@@ -1,215 +1,175 @@
-<html>
+<?php
 
+include "../Model/DatabaseConnection.php";
+
+$database = new DatabaseConnection();
+$connection = $database->openConnection();
+
+$sql = "SELECT * FROM users";
+$result = $connection->query($sql);
+
+?>
+
+<!DOCTYPE html>
+<html>
 <head>
 
     <title>User Management</title>
 
-    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
+    <link rel="stylesheet" href="design/admin design.css">
 
     <script>
-
-        function saveUser() {
-
-            let confirmSave = confirm("Are you sure you want to save this user?");
-
-            if (confirmSave) {
-
-                alert("User saved successfully");
-
-            }
-
-            return false;
-
+        function confirmRemove() {
+            return confirm("Are you sure you want to remove this user?");
         }
 
-        function editUser() {
-
-            let confirmEdit = confirm("Are you sure you want to edit this user?");
-
-            if (confirmEdit) {
-
-                alert("User edit option selected");
-
-            }
-
-            return false;
-
+        function confirmUpdate() {
+            return confirm("Are you sure you want to update this user?");
         }
-
-        function removeUser() {
-
-            let confirmRemove = confirm("Are you sure you want to remove this user?");
-
-            if (confirmRemove) {
-
-                alert("User removed successfully");
-
-            }
-
-            return false;
-
-        }
-
     </script>
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>User Management</h1>
+    <h1>User Management</h1>
 
-        <p>
-            <a href="adminPage.php">Back to Dashboard</a>
-        </p>
+    <h2>Add User</h2>
 
-        <fieldset>
+    <form action="../Controller/userSave.php" method="post">
 
-            <legend>Add User</legend>
+        <label>Username</label>
+        <input type="text" name="username" required>
 
-            <form onsubmit="return saveUser();">
+        <label>Full Name</label>
+        <input type="text" name="fullName" required>
 
-                <table>
+        <label>NID</label>
+        <input type="text" name="nid" required>
 
-                    <tr>
+        <label>Email</label>
+        <input type="email" name="email" required>
 
-                        <td><b>Username:</b></td>
+        <label>Address</label>
+        <input type="text" name="address">
 
-                        <td>
-                            <input type="text" name="username">
-                        </td>
+        <label>Password</label>
+        <input type="password" name="password" required>
 
-                    </tr>
+        <label>Phone Number</label>
+        <input type="text" name="phoneNo" required>
 
-                    <tr>
+        <label>Role</label>
+        <input type="text" name="role" required>
 
-                        <td><b>Full Name:</b></td>
+        <input type="submit" value="Save">
 
-                        <td>
-                            <input type="text" name="fullname">
-                        </td>
+    </form>
 
-                    </tr>
+    <hr>
 
-                    <tr>
+    <h2>User List</h2>
 
-                        <td><b>Email:</b></td>
+    <table border="1">
 
-                        <td>
-                            <input type="text" name="email">
-                        </td>
+        <tr>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>NID</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Password</th>
+            <th>Phone No</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
 
-                    </tr>
+        <?php
 
-                    <tr>
+        while ($row = $result->fetch_assoc()) {
 
-                        <td><b>Phone:</b></td>
+        ?>
 
-                        <td>
-                            <input type="text" name="phone">
-                        </td>
+        <tr>
 
-                    </tr>
+            <td><?php echo $row["username"]; ?></td>
 
-                    <tr>
+            <td><?php echo $row["full_name"]; ?></td>
 
-                        <td><b>Role:</b></td>
+            <td><?php echo $row["nid"]; ?></td>
 
-                        <td>
+            <td><?php echo $row["email"]; ?></td>
 
-                            <select name="role">
+            <td><?php echo $row["address"]; ?></td>
 
-                                <option value="">Select Role</option>
+            <td><?php echo $row["password"]; ?></td>
 
-                                <option value="Admin">Admin</option>
+            <td><?php echo $row["phone_no"]; ?></td>
 
-                                <option value="Doctor">Doctor</option>
+            <td><?php echo $row["role"]; ?></td>
 
-                                <option value="Patient">Patient</option>
+            <td>
 
-                                <option value="Staff">Staff</option>
+                <form action="../Controller/userUpdate.php"
+                      method="post"
+                      onsubmit="return confirmUpdate();">
 
-                            </select>
+                    <input type="hidden"
+                           name="username"
+                           value="<?php echo $row["username"]; ?>">
 
-                        </td>
+                    <input type="text"
+                           name="fullName"
+                           value="<?php echo $row["full_name"]; ?>">
 
-                    </tr>
+                    <input type="text"
+                           name="nid"
+                           value="<?php echo $row["nid"]; ?>">
 
-                    <tr>
+                    <input type="email"
+                           name="email"
+                           value="<?php echo $row["email"]; ?>">
 
-                        <td></td>
+                    <input type="text"
+                           name="address"
+                           value="<?php echo $row["address"]; ?>">
 
-                        <td>
+                    <input type="text"
+                           name="password"
+                           value="<?php echo $row["password"]; ?>">
 
-                            <button type="submit">Save</button>
+                    <input type="text"
+                           name="phoneNo"
+                           value="<?php echo $row["phone_no"]; ?>">
 
-                        </td>
+                    <input type="text"
+                           name="role"
+                           value="<?php echo $row["role"]; ?>">
 
-                    </tr>
+                    <input type="submit" value="Update">
 
-                </table>
+                </form>
 
-            </form>
+                <a href="../Controller/userRemove.php?username=<?php echo $row["username"]; ?>"
+                   onclick="return confirmRemove();">
+                    Remove
+                </a>
 
-        </fieldset>
+            </td>
 
-        <br>
+        </tr>
 
-        <h2>User List</h2>
+        <?php
 
-        <table border="1">
+        }
 
-            <tr>
+        ?>
 
-                <th>ID</th>
+    </table>
 
-                <th>Username</th>
-
-                <th>Full Name</th>
-
-                <th>Email</th>
-
-                <th>Phone</th>
-
-                <th>Role</th>
-
-                <th>Action</th>
-
-            </tr>
-
-            <tr>
-
-                <td>1</td>
-
-                <td>admin</td>
-
-                <td>Admin User</td>
-
-                <td>admin@gmail.com</td>
-
-                <td>01700000000</td>
-
-                <td>Admin</td>
-
-                <td>
-
-                    <button type="button" onclick="editUser()">
-                        Edit
-                    </button>
-
-                    <button type="button" onclick="removeUser()">
-                        Remove
-                    </button>
-
-                </td>
-
-            </tr>
-
-        </table>
-
-    </div>
+</div>
 
 </body>
-
 </html>

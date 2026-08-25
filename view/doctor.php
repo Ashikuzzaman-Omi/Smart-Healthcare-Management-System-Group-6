@@ -1,187 +1,142 @@
-<html>
+<?php
 
+include "../Model/DatabaseConnection.php";
+
+$database = new DatabaseConnection();
+$connection = $database->openConnection();
+
+$sql = "SELECT * FROM doctors";
+$result = $connection->query($sql);
+
+?>
+
+<!DOCTYPE html>
+<html>
 <head>
 
     <title>Doctor Management</title>
 
-    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
+    <link rel="stylesheet" href="design/admin design.css">
 
     <script>
-
-        function saveDoctor() {
-
-            let confirmSave = confirm("Are you sure you want to save this doctor?");
-
-            if (confirmSave) {
-
-                alert("Doctor saved successfully");
-
-            }
-
-            return false;
-
+        function confirmRemove() {
+            return confirm("Are you sure you want to remove this doctor?");
         }
 
-        function editDoctor() {
-
-            let confirmEdit = confirm("Are you sure you want to edit this doctor?");
-
-            if (confirmEdit) {
-
-                alert("Doctor edit option selected");
-
-            }
-
-            return false;
-
+        function confirmUpdate() {
+            return confirm("Are you sure you want to update this doctor?");
         }
-
-        function removeDoctor() {
-
-            let confirmRemove = confirm("Are you sure you want to remove this doctor?");
-
-            if (confirmRemove) {
-
-                alert("Doctor removed successfully");
-
-            }
-
-            return false;
-
-        }
-
     </script>
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>Doctor Management</h1>
+    <h1>Doctor Management</h1>
 
-        <p>
-            <a href="adminPage.php">Back to Dashboard</a>
-        </p>
+    <h2>Add Doctor</h2>
 
-        <fieldset>
+    <form action="../Controller/doctorSave.php" method="post">
 
-            <legend>Add Doctor</legend>
+        <label>Doctor Name</label>
+        <input type="text" name="doctorName" required>
 
-            <form onsubmit="return saveDoctor();">
+        <label>Specialization</label>
+        <input type="text" name="specialization" required>
 
-                <table>
+        <label>Email</label>
+        <input type="email" name="email" required>
 
-                    <tr>
+        <label>Phone Number</label>
+        <input type="text" name="doctorPhone" required>
 
-                        <td><b>Doctor Name:</b></td>
+        <input type="submit" value="Save">
 
-                        <td>
-                            <input type="text" name="doctorName">
-                        </td>
+    </form>
 
-                    </tr>
+    <hr>
 
-                    <tr>
+    <h2>Doctor List</h2>
 
-                        <td><b>Email:</b></td>
+    <table border="1">
 
-                        <td>
-                            <input type="text" name="doctorEmail">
-                        </td>
+        <tr>
+            <th>Doctor ID</th>
+            <th>Doctor Name</th>
+            <th>Specialization</th>
+            <th>Email</th>
+            <th>Phone No</th>
+            <th>Action</th>
+        </tr>
 
-                    </tr>
+        <?php
 
-                    <tr>
+        while ($row = $result->fetch_assoc()) {
 
-                        <td><b>Phone:</b></td>
+        ?>
 
-                        <td>
-                            <input type="text" name="doctorPhone">
-                        </td>
+        <tr>
 
-                    </tr>
+            <td><?php echo $row["doctor_id"]; ?></td>
 
-                    <tr>
+            <td><?php echo $row["doctor_name"]; ?></td>
 
-                        <td><b>Specialization:</b></td>
+            <td><?php echo $row["specialization"]; ?></td>
 
-                        <td>
-                            <input type="text" name="specialization">
-                        </td>
+            <td><?php echo $row["email"]; ?></td>
 
-                    </tr>
+            <td><?php echo $row["phone_no"]; ?></td>
 
-                    <tr>
+            <td>
 
-                        <td></td>
+                <form action="../Controller/doctorUpdate.php"
+                      method="post"
+                      onsubmit="return confirmUpdate();">
 
-                        <td>
+                    <input type="hidden"
+                           name="doctor_id"
+                           value="<?php echo $row["doctor_id"]; ?>">
 
-                            <button type="submit">Save</button>
+                    <input type="text"
+                           name="doctorName"
+                           value="<?php echo $row["doctor_name"]; ?>">
 
-                        </td>
+                    <input type="text"
+                           name="specialization"
+                           value="<?php echo $row["specialization"]; ?>">
 
-                    </tr>
+                    <input type="email"
+                           name="email"
+                           value="<?php echo $row["email"]; ?>">
 
-                </table>
+                    <input type="text"
+                           name="doctorPhone"
+                           value="<?php echo $row["phone_no"]; ?>">
 
-            </form>
+                    <input type="submit" value="Update">
 
-        </fieldset>
+                </form>
 
-        <br>
+                <a href="../Controller/doctorRemove.php?doctor_id=<?php echo $row["doctor_id"]; ?>"
+                   onclick="return confirmRemove();">
+                    Remove
+                </a>
 
-        <h2>Doctor List</h2>
+            </td>
 
-        <table border="1">
+        </tr>
 
-            <tr>
+        <?php
 
-                <th>ID</th>
+        }
 
-                <th>Name</th>
+        ?>
 
-                <th>Email</th>
+    </table>
 
-                <th>Phone</th>
-
-                <th>Specialization</th>
-
-                <th>Action</th>
-
-            </tr>
-
-            <tr>
-
-                <td>1</td>
-
-                <td>Dr. Rahman</td>
-
-                <td>doctor@gmail.com</td>
-
-                <td>01900000000</td>
-
-                <td>Medicine</td>
-
-                <td>
-
-                    <button type="button" onclick="editDoctor()">
-                        Edit
-                    </button>
-
-                    <button type="button" onclick="removeDoctor()">
-                        Remove
-                    </button>
-
-                </td>
-
-            </tr>
-
-        </table>
-
-    </div>
+</div>
 
 </body>
-
 </html>
