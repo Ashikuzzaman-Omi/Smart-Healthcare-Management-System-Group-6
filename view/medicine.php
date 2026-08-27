@@ -6,168 +6,253 @@ $database = new DatabaseConnection();
 $connection = $database->openConnection();
 
 $sql = "SELECT * FROM inventory";
+
 $result = $connection->query($sql);
 
 ?>
 
-<!DOCTYPE html>
 <html>
+
 <head>
 
     <title>Medicine Management</title>
 
-    <link rel="stylesheet" href="design/admin design.css">
+    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
 
     <script>
-        function confirmRemove() {
-            return confirm("Are you sure you want to remove this medicine?");
+
+        function saveMedicine() {
+
+            let confirmSave = confirm("Are you sure you want to save this medicine?");
+
+            return confirmSave;
+
         }
 
-        function confirmUpdate() {
-            return confirm("Are you sure you want to update this medicine?");
+
+        function editMedicine(id, medicine_name, quantity, price, expiry_date) {
+
+            let confirmEdit = confirm("Are you sure you want to edit this medicine?");
+
+            if (confirmEdit) {
+
+                let newName = prompt("Medicine Name:", medicine_name);
+
+                if (newName == null) {
+                    return;
+                }
+
+                let newQuantity = prompt("Quantity:", quantity);
+
+                if (newQuantity == null) {
+                    return;
+                }
+
+                let newPrice = prompt("Price:", price);
+
+                if (newPrice == null) {
+                    return;
+                }
+
+                let newExpiry = prompt("Expiry Date:", expiry_date);
+
+                if (newExpiry == null) {
+                    return;
+                }
+
+                let form = document.createElement("form");
+
+                form.method = "post";
+                form.action = "../Controller/medicineUpdate.php";
+
+                form.innerHTML =
+
+                    '<input type="hidden" name="id" value="' + id + '">' +
+
+                    '<input type="hidden" name="medicineName" value="' + newName + '">' +
+
+                    '<input type="hidden" name="quantity" value="' + newQuantity + '">' +
+
+                    '<input type="hidden" name="price" value="' + newPrice + '">' +
+
+                    '<input type="hidden" name="expiryDate" value="' + newExpiry + '">';
+
+                document.body.appendChild(form);
+
+                form.submit();
+
+            }
+
         }
+
+
+        function removeMedicine(id) {
+
+            let confirmRemove = confirm("Are you sure you want to remove this medicine?");
+
+            if (confirmRemove) {
+
+                window.location.href =
+                    "../Controller/medicineRemove.php?id=" + id;
+
+            }
+
+        }
+
     </script>
 
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h1>Medicine Management</h1>
+        <h1>Medicine Management</h1>
 
-    <h2>Add Medicine</h2>
+        <p>
+            <a href="adminPage.php">Back to Dashboard</a>
+        </p>
 
-    <form action="../Controller/medicineSave.php" method="post">
+        <fieldset>
 
-        <label>Product Name</label>
-        <input type="text" name="productName" required>
+            <legend>Add Medicine</legend>
 
-        <label>Purchase Date</label>
-        <input type="date" name="purchaseDate" required>
+            <form action="../Controller/medicineSave.php"
+                  method="post"
+                  onsubmit="return saveMedicine();">
 
-        <label>Quantity</label>
-        <input type="number" name="quantity" required>
+                <table>
 
-        <label>Category</label>
-        <input type="text" name="category">
+                    <tr>
 
-        <label>Expire Date</label>
-        <input type="date" name="expireDate" required>
+                        <td><b>Medicine Name:</b></td>
 
-        <label>Status</label>
-        <input type="text" name="status">
+                        <td>
+                            <input type="text" name="medicineName" required>
+                        </td>
 
-        <label>Price</label>
-        <input type="number" step="0.01" name="price">
+                    </tr>
 
-        <input type="submit" value="Save">
+                    <tr>
 
-    </form>
+                        <td><b>Quantity:</b></td>
 
-    <hr>
+                        <td>
+                            <input type="number" name="quantity" required>
+                        </td>
 
-    <h2>Medicine List</h2>
+                    </tr>
 
-    <table border="1">
+                    <tr>
 
-        <tr>
-            <th>ID</th>
-            <th>Product Name</th>
-            <th>Purchase Date</th>
-            <th>Quantity</th>
-            <th>Category</th>
-            <th>Expire Date</th>
-            <th>Status</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
+                        <td><b>Price:</b></td>
 
-        <?php
+                        <td>
+                            <input type="number" step="0.01" name="price" required>
+                        </td>
 
-        while ($row = $result->fetch_assoc()) {
+                    </tr>
 
-        ?>
+                    <tr>
 
-        <tr>
+                        <td><b>Expiry Date:</b></td>
 
-            <td><?php echo $row["id"]; ?></td>
+                        <td>
+                            <input type="date" name="expiryDate" required>
+                        </td>
 
-            <td><?php echo $row["product_name"]; ?></td>
+                    </tr>
 
-            <td><?php echo $row["purchase_date"]; ?></td>
+                    <tr>
 
-            <td><?php echo $row["quantity"]; ?></td>
+                        <td></td>
 
-            <td><?php echo $row["category"]; ?></td>
+                        <td>
 
-            <td><?php echo $row["expire_date"]; ?></td>
+                            <button type="submit">Save</button>
 
-            <td><?php echo $row["status"]; ?></td>
+                        </td>
 
-            <td><?php echo $row["price"]; ?></td>
+                    </tr>
 
-            <td>
+                </table>
 
-                <form action="../Controller/medicineUpdate.php"
-                      method="post"
-                      onsubmit="return confirmUpdate();">
+            </form>
 
-                    <input type="hidden"
-                           name="id"
-                           value="<?php echo $row["id"]; ?>">
+        </fieldset>
 
-                    <input type="text"
-                           name="productName"
-                           value="<?php echo $row["product_name"]; ?>">
+        <br>
 
-                    <input type="date"
-                           name="purchaseDate"
-                           value="<?php echo $row["purchase_date"]; ?>">
+        <h2>Medicine List</h2>
 
-                    <input type="number"
-                           name="quantity"
-                           value="<?php echo $row["quantity"]; ?>">
+        <table border="1">
 
-                    <input type="text"
-                           name="category"
-                           value="<?php echo $row["category"]; ?>">
+            <tr>
 
-                    <input type="date"
-                           name="expireDate"
-                           value="<?php echo $row["expire_date"]; ?>">
+                <th>ID</th>
 
-                    <input type="text"
-                           name="status"
-                           value="<?php echo $row["status"]; ?>">
+                <th>Medicine Name</th>
 
-                    <input type="number"
-                           step="0.01"
-                           name="price"
-                           value="<?php echo $row["price"]; ?>">
+                <th>Type</th>
 
-                    <input type="submit" value="Update">
+                <th>Quantity</th>
 
-                </form>
+                <th>Price</th>
 
-                <a href="../Controller/medicineRemove.php?id=<?php echo $row["id"]; ?>"
-                   onclick="return confirmRemove();">
-                    Remove
-                </a>
+                <th>Expiry Date</th>
 
-            </td>
+                <th>Action</th>
 
-        </tr>
+            </tr>
 
-        <?php
+            <?php while ($row = $result->fetch_assoc()) { ?>
 
-        }
+            <tr>
 
-        ?>
+                <td><?php echo $row["id"]; ?></td>
 
-    </table>
+                <td><?php echo $row["product_name"]; ?></td>
 
-</div>
+                <td><?php echo $row["category"]; ?></td>
+
+                <td><?php echo $row["quantity"]; ?></td>
+
+                <td><?php echo $row["price"]; ?></td>
+
+                <td><?php echo $row["expire_date"]; ?></td>
+
+                <td>
+
+                    <button type="button"
+                        onclick='editMedicine(
+                            <?php echo $row["id"]; ?>,
+                            <?php echo json_encode($row["product_name"]); ?>,
+                            <?php echo json_encode($row["quantity"]); ?>,
+                            <?php echo json_encode($row["price"]); ?>,
+                            <?php echo json_encode($row["expire_date"]); ?>
+                        )'>
+
+                        Edit
+
+                    </button>
+
+                    <button type="button"
+                        onclick="removeMedicine(<?php echo $row["id"]; ?>)">
+
+                        Remove
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            <?php } ?>
+
+        </table>
+
+    </div>
 
 </body>
+
 </html>

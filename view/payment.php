@@ -1,3 +1,16 @@
+<?php
+
+include "../Model/DatabaseConnection.php";
+
+$database = new DatabaseConnection();
+$connection = $database->openConnection();
+
+$sql = "SELECT * FROM payments";
+
+$result = $connection->query($sql);
+
+?>
+
 <html>
 
 <head>
@@ -12,41 +25,93 @@
 
             let confirmSave = confirm("Are you sure you want to save this payment?");
 
-            if (confirmSave) {
-
-                alert("Payment saved successfully");
-
-            }
-
-            return false;
+            return confirmSave;
 
         }
 
-        function editPayment() {
+
+        function editPayment(payment_id, patient_name, phone_no, amount, patient_serial, payment_date, status) {
 
             let confirmEdit = confirm("Are you sure you want to edit this payment?");
 
             if (confirmEdit) {
 
-                alert("Payment edit option selected");
+                let newPatient = prompt("Patient Name:", patient_name);
+
+                if (newPatient == null) {
+                    return;
+                }
+
+                let newPhone = prompt("Phone No:", phone_no);
+
+                if (newPhone == null) {
+                    return;
+                }
+
+                let newAmount = prompt("Amount:", amount);
+
+                if (newAmount == null) {
+                    return;
+                }
+
+                let newSerial = prompt("Patient Serial:", patient_serial);
+
+                if (newSerial == null) {
+                    return;
+                }
+
+                let newDate = prompt("Payment Date:", payment_date);
+
+                if (newDate == null) {
+                    return;
+                }
+
+                let newStatus = prompt("Status:", status);
+
+                if (newStatus == null) {
+                    return;
+                }
+
+                let form = document.createElement("form");
+
+                form.method = "post";
+                form.action = "../Controller/paymentUpdate.php";
+
+                form.innerHTML =
+
+                    '<input type="hidden" name="payment_id" value="' + payment_id + '">' +
+
+                    '<input type="hidden" name="patientName" value="' + newPatient + '">' +
+
+                    '<input type="hidden" name="phoneNo" value="' + newPhone + '">' +
+
+                    '<input type="hidden" name="amount" value="' + newAmount + '">' +
+
+                    '<input type="hidden" name="patientSerial" value="' + newSerial + '">' +
+
+                    '<input type="hidden" name="paymentDate" value="' + newDate + '">' +
+
+                    '<input type="hidden" name="status" value="' + newStatus + '">';
+
+                document.body.appendChild(form);
+
+                form.submit();
 
             }
 
-            return false;
-
         }
 
-        function removePayment() {
+
+        function removePayment(payment_id) {
 
             let confirmRemove = confirm("Are you sure you want to remove this payment?");
 
             if (confirmRemove) {
 
-                alert("Payment removed successfully");
+                window.location.href =
+                    "../Controller/paymentRemove.php?payment_id=" + payment_id;
 
             }
-
-            return false;
 
         }
 
@@ -68,7 +133,9 @@
 
             <legend>Add Payment</legend>
 
-            <form onsubmit="return savePayment();">
+            <form action="../Controller/paymentSave.php"
+                  method="post"
+                  onsubmit="return savePayment();">
 
                 <table>
 
@@ -77,7 +144,17 @@
                         <td><b>Patient Name:</b></td>
 
                         <td>
-                            <input type="text" name="patientName">
+                            <input type="text" name="patientName" required>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><b>Phone No:</b></td>
+
+                        <td>
+                            <input type="text" name="phoneNo" required>
                         </td>
 
                     </tr>
@@ -87,7 +164,17 @@
                         <td><b>Amount:</b></td>
 
                         <td>
-                            <input type="number" name="amount">
+                            <input type="number" step="0.01" name="amount" required>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><b>Patient Serial:</b></td>
+
+                        <td>
+                            <input type="number" name="patientSerial">
                         </td>
 
                     </tr>
@@ -104,35 +191,11 @@
 
                     <tr>
 
-                        <td><b>Payment Method:</b></td>
-
-                        <td>
-
-                            <select name="paymentMethod">
-
-                                <option value="">Select Method</option>
-
-                                <option value="Cash">Cash</option>
-
-                                <option value="Card">Card</option>
-
-                                <option value="Bkash">Bkash</option>
-
-                                <option value="Nagad">Nagad</option>
-
-                            </select>
-
-                        </td>
-
-                    </tr>
-
-                    <tr>
-
                         <td><b>Payment Status:</b></td>
 
                         <td>
 
-                            <select name="paymentStatus">
+                            <select name="status">
 
                                 <option value="">Select Status</option>
 
@@ -176,11 +239,13 @@
 
                 <th>Patient Name</th>
 
+                <th>Phone No</th>
+
                 <th>Amount</th>
 
-                <th>Payment Date</th>
+                <th>Patient Serial</th>
 
-                <th>Payment Method</th>
+                <th>Payment Date</th>
 
                 <th>Status</th>
 
@@ -188,33 +253,53 @@
 
             </tr>
 
+            <?php while ($row = $result->fetch_assoc()) { ?>
+
             <tr>
 
-                <td>1</td>
+                <td><?php echo $row["payment_id"]; ?></td>
 
-                <td>Patient Name</td>
+                <td><?php echo $row["patient_name"]; ?></td>
 
-                <td>500</td>
+                <td><?php echo $row["phone_no"]; ?></td>
 
-                <td>2026-08-21</td>
+                <td><?php echo $row["amount"]; ?></td>
 
-                <td>Cash</td>
+                <td><?php echo $row["patient_serial"]; ?></td>
 
-                <td>Paid</td>
+                <td><?php echo $row["payment_date"]; ?></td>
+
+                <td><?php echo $row["status"]; ?></td>
 
                 <td>
 
-                    <button type="button" onclick="editPayment()">
+                    <button type="button"
+                        onclick='editPayment(
+                            <?php echo $row["payment_id"]; ?>,
+                            <?php echo json_encode($row["patient_name"]); ?>,
+                            <?php echo json_encode($row["phone_no"]); ?>,
+                            <?php echo json_encode($row["amount"]); ?>,
+                            <?php echo json_encode($row["patient_serial"]); ?>,
+                            <?php echo json_encode($row["payment_date"]); ?>,
+                            <?php echo json_encode($row["status"]); ?>
+                        )'>
+
                         Edit
+
                     </button>
 
-                    <button type="button" onclick="removePayment()">
+                    <button type="button"
+                        onclick="removePayment(<?php echo $row["payment_id"]; ?>)">
+
                         Remove
+
                     </button>
 
                 </td>
 
             </tr>
+
+            <?php } ?>
 
         </table>
 

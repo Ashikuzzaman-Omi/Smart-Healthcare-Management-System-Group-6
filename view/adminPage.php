@@ -4,6 +4,8 @@ $title = "Smart Healthcare Management System";
 
 ?>
 
+<!DOCTYPE html>
+
 <html>
 
 <head>
@@ -14,18 +16,16 @@ $title = "Smart Healthcare Management System";
 
     <script>
 
-        function logoutAdmin() {
-
+        function logoutAdmin()
+        {
             let confirmLogout = confirm("Are you sure you want to logout?");
 
-            if (confirmLogout) {
-
+            if (confirmLogout)
+            {
                 alert("Logout successful");
-
             }
 
             return false;
-
         }
 
     </script>
@@ -53,9 +53,9 @@ $title = "Smart Healthcare Management System";
                     <td align="center">
 
                         <a href="user.php">
-
-                            <button type="button">User Management</button>
-
+                            <button type="button">
+                                User Management
+                            </button>
                         </a>
 
                     </td>
@@ -67,9 +67,9 @@ $title = "Smart Healthcare Management System";
                     <td align="center">
 
                         <a href="patient.php">
-
-                            <button type="button">Patient Management</button>
-
+                            <button type="button">
+                                Patient Management
+                            </button>
                         </a>
 
                     </td>
@@ -81,9 +81,9 @@ $title = "Smart Healthcare Management System";
                     <td align="center">
 
                         <a href="doctor.php">
-
-                            <button type="button">Doctor Management</button>
-
+                            <button type="button">
+                                Doctor Management
+                            </button>
                         </a>
 
                     </td>
@@ -95,9 +95,9 @@ $title = "Smart Healthcare Management System";
                     <td align="center">
 
                         <a href="medicine.php">
-
-                            <button type="button">Medicine Management</button>
-
+                            <button type="button">
+                                Medicine Management
+                            </button>
                         </a>
 
                     </td>
@@ -109,9 +109,9 @@ $title = "Smart Healthcare Management System";
                     <td align="center">
 
                         <a href="payment.php">
-
-                            <button type="button">Payment Management</button>
-
+                            <button type="button">
+                                Payment Management
+                            </button>
                         </a>
 
                     </td>

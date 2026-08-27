@@ -1,176 +1,152 @@
-<html>
+<?php
 
+include "../Model/DatabaseConnection.php";
+
+$database = new DatabaseConnection();
+$connection = $database->openConnection();
+
+$sql = "SELECT * FROM patients";
+$result = $connection->query($sql);
+
+?>
+
+<!DOCTYPE html>
+<html>
 <head>
 
     <title>Patient Management</title>
 
-    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
+    <link rel="stylesheet" href="design/admin design.css">
 
     <script>
-
-        function savePatient() {
-
-            let confirmSave = confirm("Are you sure you want to save this patient?");
-
-            if (confirmSave) {
-
-                alert("Patient saved successfully");
-
-            }
-
-            return false;
-
+        function confirmRemove() {
+            return confirm("Are you sure you want to remove this patient?");
         }
 
-        function editPatient() {
-
-            let confirmEdit = confirm("Are you sure you want to edit this patient?");
-
-            if (confirmEdit) {
-
-                alert("Patient edit option selected");
-
-            }
-
-            return false;
-
+        function confirmUpdate() {
+            return confirm("Are you sure you want to update this patient?");
         }
-
-        function removePatient() {
-
-            let confirmRemove = confirm("Are you sure you want to remove this patient?");
-
-            if (confirmRemove) {
-
-                alert("Patient removed successfully");
-
-            }
-
-            return false;
-
-        }
-
     </script>
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>Patient Management</h1>
+    <h1>Patient Management</h1>
 
-        <p>
-            <a href="adminPage.php">Back to Dashboard</a>
-        </p>
+    <h2>Add Patient</h2>
 
-        <fieldset>
+    <form action="../Controller/patientSave.php" method="post">
 
-            <legend>Add Patient</legend>
+        <label>Patient Name</label>
+        <input type="text" name="patientName" required>
 
-            <form onsubmit="return savePatient();">
+        <label>Phone Number</label>
+        <input type="text" name="phoneNo" required>
 
-                <table>
+        <label>Record Task Type</label>
+        <input type="text" name="recordTaskType">
 
-                    <tr>
+        <label>Email</label>
+        <input type="email" name="email">
 
-                        <td><b>Patient Name:</b></td>
+        <label>Address</label>
+        <input type="text" name="address">
 
-                        <td>
-                            <input type="text" name="patientName">
-                        </td>
+        <input type="submit" value="Save">
 
-                    </tr>
+    </form>
 
-                    <tr>
+    <hr>
 
-                        <td><b>Email:</b></td>
+    <h2>Patient List</h2>
 
-                        <td>
-                            <input type="text" name="patientEmail">
-                        </td>
+    <table border="1">
 
-                    </tr>
+        <tr>
+            <th>Patient Serial</th>
+            <th>Patient Name</th>
+            <th>Phone No</th>
+            <th>Record Task Type</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Action</th>
+        </tr>
 
-                    <tr>
+        <?php
 
-                        <td><b>Phone:</b></td>
+        while ($row = $result->fetch_assoc()) {
 
-                        <td>
-                            <input type="text" name="patientPhone">
-                        </td>
+        ?>
 
-                    </tr>
+        <tr>
 
-                    <tr>
+            <td><?php echo $row["patient_serial"]; ?></td>
 
-                        <td><b>Address:</b></td>
+            <td><?php echo $row["patient_name"]; ?></td>
 
-                        <td>
-                            <input type="text" name="patientAddress">
-                        </td>
+            <td><?php echo $row["phone_no"]; ?></td>
 
-                    </tr>
+            <td><?php echo $row["record_task_type"]; ?></td>
 
-                    <tr>
+            <td><?php echo $row["email"]; ?></td>
 
-                        <td></td>
+            <td><?php echo $row["address"]; ?></td>
 
-                        <td>
-                            <button type="submit">Save</button>
-                        </td>
+            <td>
 
-                    </tr>
+                <form action="../Controller/patientUpdate.php"
+                      method="post"
+                      onsubmit="return confirmUpdate();">
 
-                </table>
+                    <input type="hidden"
+                           name="patient_serial"
+                           value="<?php echo $row["patient_serial"]; ?>">
 
-            </form>
+                    <input type="text"
+                           name="patientName"
+                           value="<?php echo $row["patient_name"]; ?>">
 
-        </fieldset>
+                    <input type="text"
+                           name="phoneNo"
+                           value="<?php echo $row["phone_no"]; ?>">
 
-        <br>
+                    <input type="text"
+                           name="recordTaskType"
+                           value="<?php echo $row["record_task_type"]; ?>">
 
-        <h2>Patient List</h2>
+                    <input type="email"
+                           name="email"
+                           value="<?php echo $row["email"]; ?>">
 
-        <table border="1">
+                    <input type="text"
+                           name="address"
+                           value="<?php echo $row["address"]; ?>">
 
-            <tr>
+                    <input type="submit" value="Update">
 
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Action</th>
+                </form>
 
-            </tr>
+                <a href="../Controller/patientRemove.php?patient_serial=<?php echo $row["patient_serial"]; ?>"
+                   onclick="return confirmRemove();">
+                    Remove
+                </a>
 
-            <tr>
+            </td>
 
-                <td>1</td>
-                <td>Patient Name</td>
-                <td>patient@gmail.com</td>
-                <td>01800000000</td>
-                <td>Dhaka</td>
+        </tr>
 
-                <td>
+        <?php
 
-                    <button type="button" onclick="editPatient()">
-                        Edit
-                    </button>
+        }
 
-                    <button type="button" onclick="removePatient()">
-                        Remove
-                    </button>
+        ?>
 
-                </td>
+    </table>
 
-            </tr>
-
-        </table>
-
-    </div>
+</div>
 
 </body>
-
 </html>
