@@ -3,150 +3,298 @@
 include "../Model/DatabaseConnection.php";
 
 $database = new DatabaseConnection();
+
 $connection = $database->openConnection();
 
 $sql = "SELECT * FROM patients";
+
 $result = $connection->query($sql);
 
 ?>
 
-<!DOCTYPE html>
 <html>
+
 <head>
 
     <title>Patient Management</title>
 
-    <link rel="stylesheet" href="design/admin design.css">
+    <link rel="stylesheet" type="text/css" href="design/adminDesign.css">
 
     <script>
-        function confirmRemove() {
-            return confirm("Are you sure you want to remove this patient?");
+
+        function savePatient() {
+
+            let confirmSave = confirm("Are you sure you want to save this patient?");
+
+            return confirmSave;
+
         }
 
-        function confirmUpdate() {
-            return confirm("Are you sure you want to update this patient?");
+
+        function editPatient(patient_serial, patient_name, phone_no, record_task_type, email, address) {
+
+            let confirmEdit = confirm("Are you sure you want to edit this patient?");
+
+            if (confirmEdit) {
+
+                let newName = prompt("Patient Name:", patient_name);
+
+                if (newName == null) {
+                    return;
+                }
+
+                let newPhone = prompt("Phone:", phone_no);
+
+                if (newPhone == null) {
+                    return;
+                }
+
+                let newTask = prompt("Record Task Type:", record_task_type);
+
+                if (newTask == null) {
+                    return;
+                }
+
+                let newEmail = prompt("Email:", email);
+
+                if (newEmail == null) {
+                    return;
+                }
+
+                let newAddress = prompt("Address:", address);
+
+                if (newAddress == null) {
+                    return;
+                }
+
+                let form = document.createElement("form");
+
+                form.method = "post";
+
+                form.action = "../Controller/patientUpdate.php";
+
+                form.innerHTML =
+
+                    '<input type="hidden" name="patient_serial" value="' + patient_serial + '">' +
+
+                    '<input type="hidden" name="patientName" value="' + newName + '">' +
+
+                    '<input type="hidden" name="phoneNo" value="' + newPhone + '">' +
+
+                    '<input type="hidden" name="recordTaskType" value="' + newTask + '">' +
+
+                    '<input type="hidden" name="email" value="' + newEmail + '">' +
+
+                    '<input type="hidden" name="address" value="' + newAddress + '">';
+
+                document.body.appendChild(form);
+
+                form.submit();
+
+            }
+
         }
+
+
+        function removePatient(patient_serial) {
+
+            let confirmRemove = confirm("Are you sure you want to remove this patient?");
+
+            if (confirmRemove) {
+
+                window.location.href =
+                    "../Controller/patientRemove.php?patient_serial=" + patient_serial;
+
+            }
+
+        }
+
     </script>
 
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h1>Patient Management</h1>
+        <h1>Patient Management</h1>
 
-    <h2>Add Patient</h2>
+        <p>
 
-    <form action="../Controller/patientSave.php" method="post">
+            <a href="adminPage.php">Back to Dashboard</a>
 
-        <label>Patient Name</label>
-        <input type="text" name="patientName" required>
+        </p>
 
-        <label>Phone Number</label>
-        <input type="text" name="phoneNo" required>
+        <fieldset>
 
-        <label>Record Task Type</label>
-        <input type="text" name="recordTaskType">
+            <legend>Add Patient</legend>
 
-        <label>Email</label>
-        <input type="email" name="email">
+            <form action="../Controller/patientSave.php"
+                  method="post"
+                  onsubmit="return savePatient();">
 
-        <label>Address</label>
-        <input type="text" name="address">
+                <table>
 
-        <input type="submit" value="Save">
+                    <tr>
 
-    </form>
+                        <td><b>Patient Name:</b></td>
 
-    <hr>
+                        <td>
 
-    <h2>Patient List</h2>
+                            <input type="text" name="patientName" required>
 
-    <table border="1">
+                        </td>
 
-        <tr>
-            <th>Patient Serial</th>
-            <th>Patient Name</th>
-            <th>Phone No</th>
-            <th>Record Task Type</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Action</th>
-        </tr>
+                    </tr>
 
-        <?php
+                    <tr>
 
-        while ($row = $result->fetch_assoc()) {
+                        <td><b>Phone:</b></td>
 
-        ?>
+                        <td>
 
-        <tr>
+                            <input type="text" name="phoneNo" required>
 
-            <td><?php echo $row["patient_serial"]; ?></td>
+                        </td>
 
-            <td><?php echo $row["patient_name"]; ?></td>
+                    </tr>
 
-            <td><?php echo $row["phone_no"]; ?></td>
+                    <tr>
 
-            <td><?php echo $row["record_task_type"]; ?></td>
+                        <td><b>Record Task Type:</b></td>
 
-            <td><?php echo $row["email"]; ?></td>
+                        <td>
 
-            <td><?php echo $row["address"]; ?></td>
+                            <input type="text" name="recordTaskType" value="Registration">
 
-            <td>
+                        </td>
 
-                <form action="../Controller/patientUpdate.php"
-                      method="post"
-                      onsubmit="return confirmUpdate();">
+                    </tr>
 
-                    <input type="hidden"
-                           name="patient_serial"
-                           value="<?php echo $row["patient_serial"]; ?>">
+                    <tr>
 
-                    <input type="text"
-                           name="patientName"
-                           value="<?php echo $row["patient_name"]; ?>">
+                        <td><b>Email:</b></td>
 
-                    <input type="text"
-                           name="phoneNo"
-                           value="<?php echo $row["phone_no"]; ?>">
+                        <td>
 
-                    <input type="text"
-                           name="recordTaskType"
-                           value="<?php echo $row["record_task_type"]; ?>">
+                            <input type="text" name="email" required>
 
-                    <input type="email"
-                           name="email"
-                           value="<?php echo $row["email"]; ?>">
+                        </td>
 
-                    <input type="text"
-                           name="address"
-                           value="<?php echo $row["address"]; ?>">
+                    </tr>
 
-                    <input type="submit" value="Update">
+                    <tr>
 
-                </form>
+                        <td><b>Address:</b></td>
 
-                <a href="../Controller/patientRemove.php?patient_serial=<?php echo $row["patient_serial"]; ?>"
-                   onclick="return confirmRemove();">
-                    Remove
-                </a>
+                        <td>
 
-            </td>
+                            <input type="text" name="address" required>
 
-        </tr>
+                        </td>
 
-        <?php
+                    </tr>
 
-        }
+                    <tr>
 
-        ?>
+                        <td></td>
 
-    </table>
+                        <td>
 
-</div>
+                            <button type="submit">Save</button>
+
+                        </td>
+
+                    </tr>
+
+                </table>
+
+            </form>
+
+        </fieldset>
+
+        <br>
+
+        <h2>Patient List</h2>
+
+        <table border="1">
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Name</th>
+
+                <th>Phone</th>
+
+                <th>Task Type</th>
+
+                <th>Email</th>
+
+                <th>Address</th>
+
+                <th>Action</th>
+
+            </tr>
+
+            <?php while ($row = $result->fetch_assoc()) { ?>
+
+            <tr>
+
+                <td><?php echo $row["patient_serial"]; ?></td>
+
+                <td><?php echo $row["patient_name"]; ?></td>
+
+                <td><?php echo $row["phone_no"]; ?></td>
+
+                <td><?php echo $row["record_task_type"]; ?></td>
+
+                <td><?php echo $row["email"]; ?></td>
+
+                <td><?php echo $row["address"]; ?></td>
+
+                <td>
+
+                    <button type="button"
+
+                        onclick='editPatient(
+
+                            <?php echo $row["patient_serial"]; ?>,
+
+                            <?php echo json_encode($row["patient_name"]); ?>,
+
+                            <?php echo json_encode($row["phone_no"]); ?>,
+
+                            <?php echo json_encode($row["record_task_type"]); ?>,
+
+                            <?php echo json_encode($row["email"]); ?>,
+
+                            <?php echo json_encode($row["address"]); ?>
+
+                        )'>
+
+                        Edit
+
+                    </button>
+
+                    <button type="button"
+
+                        onclick="removePatient(<?php echo $row["patient_serial"]; ?>)">
+
+                        Remove
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            <?php } ?>
+
+        </table>
+
+    </div>
 
 </body>
+
 </html>
