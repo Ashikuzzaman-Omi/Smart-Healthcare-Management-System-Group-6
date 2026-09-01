@@ -1,10 +1,9 @@
 <?php
-// medicine_controller.php
-require_once 'includes/auth.php';   // session_start() + require_login() + csrf helpers
+require_once 'includes/auth.php'; 
 require_once 'config/db.php';
 require_once 'models/Medicine.php';
 
-require_login(); // every action below now requires a logged-in session
+require_login();
 
 $medicine = new Medicine($conn);
 
@@ -57,7 +56,7 @@ switch ($action) {
         break;
 
     case 'delete':
-        // Delete only happens via POST + CSRF token (plain GET link can no longer delete)
+    
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             verify_csrf();
             $id = (int) ($_POST['id'] ?? 0);

@@ -1,9 +1,7 @@
 <?php
-// register.php
 require_once 'includes/auth.php';
 require_once 'config/db.php';
 
-// already logged in? go straight to the app
 if (isset($_SESSION['user_id'])) {
     header("Location: medicine_controller.php?action=list");
     exit();
@@ -35,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($errors)) {
-        // check for duplicate username or email
         $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
         $stmt->bind_param("ss", $username, $email);
         $stmt->execute();

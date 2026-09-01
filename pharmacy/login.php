@@ -1,9 +1,7 @@
 <?php
-// login.php
 require_once 'includes/auth.php';
 require_once 'config/db.php';
 
-// already logged in? go straight to the app
 if (isset($_SESSION['user_id'])) {
     header("Location: medicine_controller.php?action=list");
     exit();
@@ -12,7 +10,6 @@ if (isset($_SESSION['user_id'])) {
 $error = '';
 $successMsg = $_GET['msg'] ?? '';
 
-// remember the username in a cookie so it's prefilled next time
 $rememberedUsername = $_COOKIE['username'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -27,12 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = $stmt->get_result()->fetch_assoc();
 
     if ($user && password_verify($password, $user['password'])) {
-        // regenerate session id on login to prevent session fixation
+    
         session_regenerate_id(true);
         $_SESSION['user_id']  = $user['id'];
         $_SESSION['username'] = $user['username'];
 
-        // remember username in a cookie for 7 days, httponly so JS can't steal it
         setcookie("username", $user['username'], time() + 7 * 24 * 3600, "/", "", false, true);
 
         header("Location: medicine_controller.php?action=list");

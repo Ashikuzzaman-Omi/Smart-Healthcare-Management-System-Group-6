@@ -1,12 +1,9 @@
 <?php
-// setup_admin.php
-// Run this file ONCE in the browser after importing database.sql.
-// It creates a default admin login. DELETE THIS FILE right after.
 
 require_once 'config/db.php';
 
 $username = 'admin';
-$password = 'admin123'; // change this after your first login!
+$password = 'admin123';
 
 $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);

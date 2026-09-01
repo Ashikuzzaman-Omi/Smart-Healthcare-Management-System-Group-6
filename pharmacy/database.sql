@@ -18,8 +18,3 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- No admin user inserted here.
--- Run setup_admin.php ONCE in the browser after import to create
--- the default admin account (username: admin / password: admin123),
--- then DELETE setup_admin.php immediately.

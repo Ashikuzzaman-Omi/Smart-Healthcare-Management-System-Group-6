@@ -1,5 +1,5 @@
 <?php
-// config/db.php
+
 require_once __DIR__ . '/../includes/DatabaseConnection.php';
 
 $database = new DatabaseConnection();
